@@ -6,26 +6,23 @@
       <title>New Tab</title>
 
       <!-- CSS -->
-      <link href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.7/css/foundation.min.css" rel="stylesheet" type="text/css" />
-      <link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+      <link href="js/foundation.min.css" rel="stylesheet" type="text/css" />
       <link href="main.css" rel="stylesheet" type="text/css" />
           
       <!-- JavaScript -->
-      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-      <script type="text/javascript" src="main.js"></script>
-
-      <link rel="icon" href="favicon.ico" type="image/x-icon">
+      <script src="js/jquery-1.11.3.min.js"></script>
+      <script type="text/javascript" src="js/main.js"></script>
   </head>
 
   <body>
     <div class="container">
       <div class="question">
-        <button class="short" onclick="start(this)">Short survey</button>
+        <button id="start" class="short">Short survey</button>
         or
-        <button class="long" onclick="start(this)">Long survey</button>
+        <button id="start" class="long">Long survey</button>
       </div>
       <div class="next">
-        <button id="next" onclick="next()">Next</button>
+        <button id="next">Next</button>
         <label class="empty">Leave options blank to skip.</label>
         <label class="birthday">Birthdate must be filled out.</label>
       </div>
