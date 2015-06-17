@@ -1,19 +1,125 @@
-var long_questions = [
-	"I am a <input class='number'></input> year old \
-          <select>\
-            <option value='white'>white</option>\
-            <option value='nonwhite'>nonwhite</option>\
-          </select>\
-          <select>\
-            <option value='male'>male</option>\
-            <option value='female'>female</option>\
-          </select> ."
-]
+var responses = [];
+var index = 0;
+var expected_date;
+var show_more = true;
+localStorage;
 
-var short_questions = [
-	"<label>Birthdate</label> Month <input class='number'></input>\
-		Day <input class='number'></input>\
-		Year <input class='number'></input>",
+function countdown(dt) {
+	$("#countdown").show();
+
+    var end = new Date(dt);
+    var _year = 1000 * 60 * 60 * 24 * 365;
+    var timer;
+
+    function update() {
+        var now = new Date();
+        var distance = end - now;
+
+        var years = (distance / _year).toFixed(9);
+
+        var year_strings = (years+"").split(".");
+
+        $("#countdown #left").text(year_strings[0]);
+        $("#countdown #right").text("."+year_strings[1]);
+    }
+
+    timer = setInterval(update, 100);
+}
+
+function start(e) {
+	$(".question").html(questions[index]);
+	$(".next").show();
+	
+	index++;
+}
+
+function next() {
+	if (index == 0) {
+		var emptybd = false;
+		var birthdaycount = 0;
+		$("input").each(function() {
+			if ($(this).val() == "" || isNaN($(this).val())) {
+				emptybd = true;
+				$(".next label.birthday").show();
+			} else {
+				birthdaycount++;
+			}
+		});
+		if (!emptybd) {
+			$(".next label.birthday").hide();
+			$("input, select").each(function() {
+				responses.push($(this).val());
+			});
+			$(".question").html(questions[index]);
+			index++;
+		}
+	}
+	else if (index < questions.length) {
+		$("input, select").each(function() {
+			responses.push($(this).val());
+		});
+		$(".question").html(questions[index]);
+		index++;
+	} else {
+		$(".question").hide();
+		$(".next").hide();
+		var birthday = new Date(responses[2]+"-"+responses[0]+"-"+responses[1]);
+  		var age = ~~((Date.now() - birthday) / (31557600000));
+
+		$.getJSON("http://alloworigin.com/get?url=" + encodeURIComponent(
+			"http://gosset.wharton.upenn.edu/~foster/mortality/form-manager.pl?"+
+			"married="+responses[3]+"&race="+responses[4]+"&gender="+responses[5]+
+			"&smoking="+responses[6]+"&age="+age+"&seat_belt="+responses[7]+
+			"&driving="+responses[8]+"&exercise="+responses[9]), 
+			function(data){
+				var expected = Number(data.contents.split("live to ")[1].split(" years")[0]);
+				expected_date = birthday;
+				expected_date.setDate(expected_date.getDate() + expected*365);
+				$(".container").empty();
+				countdown(expected_date);
+
+				//local storage
+				localStorage['expected_date'] = expected_date;
+				localStorage.setItem('load_countdown', JSON.stringify(true));
+			});
+	}
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+	var more = document.getElementById('more'); 
+	more.addEventListener('click', function() {
+		if (show_more) {
+	    	$(".more").animate({top: '0'});
+	    } else {
+	    	$(".more").animate({top: '-281px'});
+	    }
+	    show_more = !show_more;
+    });
+
+    var min = document.getElementById('min'); 
+	min.addEventListener('click', function() {
+    	$(".more").animate({top: '-281px'});
+    });
+
+	var link = document.getElementById('ast');
+    link.addEventListener('click', function() {
+    	localStorage.clear();
+    	location.reload();
+    });
+
+	if (localStorage['load_countdown']) {
+		$(".container").empty();
+		countdown(Date.parse(localStorage["expected_date"]));
+	} else {
+	    var b_next = document.getElementById('next');
+	    b_next.addEventListener('click', function() {
+	        next();
+	    });
+	}
+
+});
+
+var questions = [
 	"I am a \
 		<select>\
 		<option value='0'>single</option>\
@@ -78,129 +184,3 @@ var short_questions = [
 		</option></select>'
 
 ]
-
-var questions = [];
-var responses = [];
-var index = 0;
-var expected_date;
-localStorage;
-
-function countdown(dt) {
-	$("#countdown").show();
-
-    var end = new Date(dt);
-    var _year = 1000 * 60 * 60 * 24 * 365;
-    var timer;
-
-    function update() {
-        var now = new Date();
-        var distance = end - now;
-
-        var years = (distance / _year).toFixed(9);
-
-        var year_strings = (years+"").split(".");
-
-        $("#countdown #left").text(year_strings[0]);
-        $("#countdown #right").text("."+year_strings[1]);
-    }
-
-    timer = setInterval(update, 100);
-}
-
-function start(e) {
-	if (e.className == "short") {
-		questions= short_questions;
-		$(".next label.empty").remove();
-	} else {
-		questions = long_questions;
-		$(".next label.empty").hide();
-	}
-	$(".question").html(questions[index]);
-	$(".next").show();
-	
-	$(".next label.birthday").hide();
-	index++;
-}
-
-function next() {
-	if (index == 1) {
-		var emptybd = false;
-		$("input").each(function() {
-			if ($(this).val() == "") {
-				emptybd = true;
-				$(".next label.birthday").show();
-			}
-		});
-		if (!emptybd) {
-			$(".next label.birthday").hide();
-			$("input, select").each(function() {
-				responses.push($(this).val());
-			});
-			$(".question").html(questions[index]);
-			$(".next label.empty").show();
-			index++;
-		}
-	}
-	else if (index < questions.length) {
-		$("input, select").each(function() {
-			responses.push($(this).val());
-		});
-		$(".question").html(questions[index]);
-		index++;
-	} else {
-		$(".question").hide();
-		$(".next").hide();
-		var birthday = new Date(responses[2]+"-"+responses[0]+"-"+responses[1]);
-  		var age = ~~((Date.now() - birthday) / (31557600000));
-		$.getJSON("http://alloworigin.com/get?url=" + encodeURIComponent(
-			"http://gosset.wharton.upenn.edu/~foster/mortality/form-manager.pl?"+
-			"married="+responses[3]+"&race="+responses[4]+"&gender="+responses[5]+
-			"&smoking="+responses[6]+"&age="+age+"&seat_belt="+responses[7]+
-			"&driving="+responses[8]+"&exercise="+responses[9]), 
-			function(data){
-				var expected = Number(data.contents.split("live to ")[1].split(" years")[0]);
-				expected_date = birthday;
-				expected_date.setDate(expected_date.getDate() + expected*365);
-				$(".container").empty();
-				countdown(expected_date);
-
-				//local storage
-				localStorage['expected_date'] = expected_date;
-				localStorage.setItem('load_countdown', JSON.stringify(true));
-			});
-	}
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-	var more = document.getElementById('more'); 
-	more.addEventListener('click', function() {
-    	$(".more").animate({top: '0'});
-    });
-
-    var min = document.getElementById('min'); 
-	min.addEventListener('click', function() {
-    	$(".more").animate({top: '-258px'});
-    });
-
-	var link = document.getElementById('ast');
-    link.addEventListener('click', function() {
-    	localStorage.clear();
-    	location.reload();
-    });
-
-	if (localStorage['load_countdown']) {
-		$(".container").empty();
-		countdown(Date.parse(localStorage["expected_date"]));
-	} else {
-	    var b_start = document.getElementById('start');
-	    b_start.addEventListener('click', function() {
-	        start(this);
-	    });
-
-	    var b_next = document.getElementById('next');
-	    b_next.addEventListener('click', function() {
-	        next();
-	    });
-	}
-
-});
