@@ -4,7 +4,6 @@
 }
 
 body {
-	max-width: 640px;
 	margin: auto;
 }
 
@@ -84,18 +83,55 @@ label.birthday {
 
 #countdown #desc{
 	text-align: left;
-	width: 297px;
+	width: 295px;
 	margin: auto;
 	line-height: 0.8;
 }
 
 #countdown #desc a:hover{
-	color: #008cba;
+	color: #007095;;
 }
 
 #countdown #desc a{
-	color: #666;
+	color: #008cba;
 	letter-spacing: -0.5px;
 	font-weight: 400;
 	font-size: 1.1rem;
+}
+
+.more {
+	position: fixed;
+	top: -259px;
+	right: 2rem;
+	padding: 1rem;
+	padding-bottom: 0.2rem;
+	border: lightgrey dashed thin;
+	border-top: none;
+	background-color: white;
+	width: 250px;
+}
+
+.more p {
+	font-size: 0.9rem;
+}
+
+.more a {
+	color: #008cba;
+	font-weight: bold;
+	font-style: italic;
+
+}
+
+.more a:hover {
+	color: #007095;
+}
+
+.more #ast {
+	text-transform: uppercase;
+	font-size: 0.8rem;
+	font-style: normal;
+}
+
+.more #min {
+	float:right;
 }

@@ -85,21 +85,6 @@ var index = 0;
 var expected_date;
 localStorage;
 
-document.addEventListener('DOMContentLoaded', function() {
-	if (localStorage['load_countdown']) {
-		$(".container").empty();
-		countdown(Date.parse(localStorage["expected_date"]));
-	}
-    var b_start = document.getElementById('start');
-    b_start.addEventListener('click', function() {
-        start(this);
-    });
-    var b_next = document.getElementById('next');
-    b_next.addEventListener('click', function() {
-        next();
-    });
-});
-
 function countdown(dt) {
 	$("#countdown").show();
 
@@ -185,3 +170,37 @@ function next() {
 			});
 	}
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+	var more = document.getElementById('more'); 
+	more.addEventListener('click', function() {
+    	$(".more").animate({top: '0'});
+    });
+
+    var min = document.getElementById('min'); 
+	min.addEventListener('click', function() {
+    	$(".more").animate({top: '-258px'});
+    });
+
+	var link = document.getElementById('ast');
+    link.addEventListener('click', function() {
+    	localStorage.clear();
+    	location.reload();
+    });
+
+	if (localStorage['load_countdown']) {
+		$(".container").empty();
+		countdown(Date.parse(localStorage["expected_date"]));
+	} else {
+	    var b_start = document.getElementById('start');
+	    b_start.addEventListener('click', function() {
+	        start(this);
+	    });
+
+	    var b_next = document.getElementById('next');
+	    b_next.addEventListener('click', function() {
+	        next();
+	    });
+	}
+
+});
