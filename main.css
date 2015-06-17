@@ -32,7 +32,7 @@ body {
 	padding-right: 1rem
 }
 
-.next {
+label.birthday {
 	display: none;
 }
 
@@ -101,7 +101,7 @@ label.birthday {
 
 .more {
 	position: fixed;
-	top: -259px;
+	top: -281px;
 	right: 2rem;
 	padding: 1rem;
 	padding-bottom: 0.2rem;
