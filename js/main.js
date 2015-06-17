@@ -83,8 +83,26 @@ var questions = [];
 var responses = [];
 var index = 0;
 var expected_date;
+localStorage;
+
+document.addEventListener('DOMContentLoaded', function() {
+	if (localStorage['load_countdown']) {
+		$(".container").empty();
+		countdown(Date.parse(localStorage["expected_date"]));
+	}
+    var b_start = document.getElementById('start');
+    b_start.addEventListener('click', function() {
+        start(this);
+    });
+    var b_next = document.getElementById('next');
+    b_next.addEventListener('click', function() {
+        next();
+    });
+});
 
 function countdown(dt) {
+	$("#countdown").show();
+
     var end = new Date(dt);
     var _year = 1000 * 60 * 60 * 24 * 365;
     var timer;
@@ -159,8 +177,11 @@ function next() {
 				expected_date = birthday;
 				expected_date.setDate(expected_date.getDate() + expected*365);
 				$(".container").empty();
-				$("#countdown").show();
 				countdown(expected_date);
+
+				//local storage
+				localStorage['expected_date'] = expected_date;
+				localStorage.setItem('load_countdown', JSON.stringify(true));
 			});
 	}
 }
