@@ -1,0 +1,11 @@
+{
+  "manifest_version": 2,
+  "name": "Motivation?",
+  "description": "New tab extension inspired by the Motivation extension. Counts down not up.",
+  "version": "0.1",
+  "permissions" : ["management"],
+  "chrome_url_overrides" : {
+      "newtab": "index.html"
+  },
+  "content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'"
+}
