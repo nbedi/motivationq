@@ -6,6 +6,7 @@
 
   "permissions": [
     "activeTab",
+    "http://gosset.wharton.upenn.edu/",
     "https://ajax.googleapis.com/"
   ],
 

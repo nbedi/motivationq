@@ -61,18 +61,25 @@ function next() {
 		$(".question").html(questions[index]);
 		index++;
 	} else {
+		$("input, select").each(function() {
+			responses.push($(this).val());
+		});
 		$(".question").hide();
 		$(".next").hide();
 		var birthday = new Date(responses[2]+"-"+responses[0]+"-"+responses[1]);
   		var age = ~~((Date.now() - birthday) / (31557600000));
 
-		$.getJSON("http://alloworigin.com/get?url=" + encodeURIComponent(
-			"http://gosset.wharton.upenn.edu/~foster/mortality/form-manager.pl?"+
+  		var url = "http://gosset.wharton.upenn.edu/~foster/mortality/form-manager.pl?"+
 			"married="+responses[3]+"&race="+responses[4]+"&gender="+responses[5]+
 			"&smoking="+responses[6]+"&age="+age+"&seat_belt="+responses[7]+
-			"&driving="+responses[8]+"&exercise="+responses[9]), 
-			function(data){
-				var expected = Number(data.contents.split("live to ")[1].split(" years")[0]);
+			"&driving="+responses[8]+"&exercise="+responses[9];
+
+  		$.ajax({
+	        url: url,
+	        type: "GET",
+	        dataType: "html",
+	        success: function (data) {
+	            var expected = Number(data.split("live to ")[1].split(" years")[0]);
 				expected_date = birthday;
 				expected_date.setDate(expected_date.getDate() + expected*365);
 				$(".container").empty();
@@ -81,7 +88,11 @@ function next() {
 				//local storage
 				localStorage['expected_date'] = expected_date;
 				localStorage.setItem('load_countdown', JSON.stringify(true));
-			});
+	        },
+	        error: function (xhr, status) {
+	            console.log(xhr);
+	        }
+	    });
 	}
 }
 
